@@ -1,0 +1,60 @@
+openapi: 3.0.0
+info:
+  title: Google Drive and Docs Integration
+  description: Enables ChatGPT to create Google Docs, Slides, and Sheets.
+  version: 1.0.0
+servers:
+  - url: https://www.googleapis.com
+    description: Google API base URL
+
+paths:
+  /drive/v3/files:
+    post:
+      summary: Create a file in Google Drive
+      operationId: createFile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the file.
+                mimeType:
+                  type: string
+                  description: MIME type (e.g., Docs, Slides, Sheets).
+                parents:
+                  type: array
+                  items:
+                    type: string
+                  description: Folder ID to save the file in.
+      responses:
+        '200':
+          description: File created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  description: File ID.
+
+components:
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://accounts.google.com/o/oauth2/auth
+          tokenUrl: https://oauth2.googleapis.com/token
+          scopes:
+            https://www.googleapis.com/auth/drive.file: Manage files created by the app.
+            https://www.googleapis.com/auth/documents: Manage Google Docs.
+            https://www.googleapis.com/auth/presentations: Manage Google Slides.
+            https://www.googleapis.com/auth/spreadsheets: Manage Google Sheets.
+
+security:
+  - OAuth2: []
